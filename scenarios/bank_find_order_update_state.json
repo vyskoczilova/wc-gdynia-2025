@@ -1,0 +1,663 @@
+{
+    "name": "Bank → Update order",
+    "flow": [
+        {
+            "id": 1,
+            "module": "fio:TriggerNewTransaction",
+            "version": 1,
+            "parameters": {
+                "account": 148611
+            },
+            "mapper": null,
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                }
+            }
+        },
+        {
+            "id": 2,
+            "module": "woocommerce:SearchOrders",
+            "version": 3,
+            "parameters": {
+                "__IMTCONN__": 2016751
+            },
+            "mapper": {
+                "search": "{{1.vs}}",
+                "status": "on-hold",
+                "limit": "1"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Filbec DEV",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "woocommerce2"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "status": {
+                            "mode": "chose",
+                            "label": "On hold"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:woocommerce2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "search",
+                        "type": "text",
+                        "label": "Search"
+                    },
+                    {
+                        "name": "customer",
+                        "type": "number",
+                        "label": "Customer ID"
+                    },
+                    {
+                        "name": "product",
+                        "type": "text",
+                        "label": "Product ID"
+                    },
+                    {
+                        "name": "status",
+                        "type": "select",
+                        "label": "Status"
+                    },
+                    {
+                        "name": "limit",
+                        "type": "number",
+                        "label": "Limit",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "woocommerce:UpdateOrder",
+            "version": 3,
+            "parameters": {
+                "__IMTCONN__": 2016751
+            },
+            "mapper": {
+                "id": "{{2.id}}",
+                "status": "processing",
+                "billing": {},
+                "shipping": {}
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Filbec DEV",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "woocommerce2"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "status": {
+                            "mode": "chose",
+                            "label": "Processing"
+                        },
+                        "currency": {
+                            "mode": "chose"
+                        },
+                        "paymentMethod": {
+                            "mode": "chose"
+                        },
+                        "lineItems": {
+                            "mode": "edit"
+                        },
+                        "shippingLines": {
+                            "mode": "edit"
+                        },
+                        "feeLines": {
+                            "mode": "edit"
+                        },
+                        "couponLines": {
+                            "mode": "edit"
+                        },
+                        "setPaid": {
+                            "mode": "chose"
+                        },
+                        "metaData": {
+                            "mode": "edit"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:woocommerce2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "id",
+                        "type": "number",
+                        "label": "Order ID",
+                        "required": true
+                    },
+                    {
+                        "name": "parentId",
+                        "type": "number",
+                        "label": "Parent Order ID"
+                    },
+                    {
+                        "name": "status",
+                        "type": "select",
+                        "label": "Status"
+                    },
+                    {
+                        "name": "currency",
+                        "type": "select",
+                        "label": "Currency",
+                        "validate": {
+                            "enum": [
+                                "AED",
+                                "AFN",
+                                "ALL",
+                                "AMD",
+                                "ANG",
+                                "AOA",
+                                "ARS",
+                                "AUD",
+                                "AWG",
+                                "AZN",
+                                "BAM",
+                                "BBD",
+                                "BDT",
+                                "BGN",
+                                "BHD",
+                                "BIF",
+                                "BMD",
+                                "BND",
+                                "BOB",
+                                "BRL",
+                                "BSD",
+                                "BTC",
+                                "BTN",
+                                "BWP",
+                                "BYR",
+                                "BYN",
+                                "BZD",
+                                "CAD",
+                                "CDF",
+                                "CHF",
+                                "CLP",
+                                "CNY",
+                                "COP",
+                                "CRC",
+                                "CUC",
+                                "CUP",
+                                "CVE",
+                                "CZK",
+                                "DJF",
+                                "DKK",
+                                "DOP",
+                                "DZD",
+                                "EGP",
+                                "ERN",
+                                "ETB",
+                                "EUR",
+                                "FJD",
+                                "FKP",
+                                "GBP",
+                                "GEL",
+                                "GGP",
+                                "GHS",
+                                "GIP",
+                                "GMD",
+                                "GNF",
+                                "GTQ",
+                                "GYD",
+                                "HKD",
+                                "HNL",
+                                "HRK",
+                                "HTG",
+                                "HUF",
+                                "IDR",
+                                "ILS",
+                                "IMP",
+                                "INR",
+                                "IQD",
+                                "IRR",
+                                "IRT",
+                                "ISK",
+                                "JEP",
+                                "JMD",
+                                "JOD",
+                                "JPY",
+                                "KES",
+                                "KGS",
+                                "KHR",
+                                "KMF",
+                                "KPW",
+                                "KRW",
+                                "KWD",
+                                "KYD",
+                                "KZT",
+                                "LAK",
+                                "LBP",
+                                "LKR",
+                                "LRD",
+                                "LSL",
+                                "LYD",
+                                "MAD",
+                                "MDL",
+                                "MGA",
+                                "MKD",
+                                "MMK",
+                                "MNT",
+                                "MOP",
+                                "MRO",
+                                "MUR",
+                                "MVR",
+                                "MWK",
+                                "MXN",
+                                "MYR",
+                                "MZN",
+                                "NAD",
+                                "NGN",
+                                "NIO",
+                                "NOK",
+                                "NPR",
+                                "NZD",
+                                "OMR",
+                                "PAB",
+                                "PEN",
+                                "PGK",
+                                "PHP",
+                                "PKR",
+                                "PLN",
+                                "PRB",
+                                "PYG",
+                                "QAR",
+                                "RON",
+                                "RSD",
+                                "RUB",
+                                "RWF",
+                                "SAR",
+                                "SBD",
+                                "SCR",
+                                "SDG",
+                                "SEK",
+                                "SGD",
+                                "SHP",
+                                "SLL",
+                                "SOS",
+                                "SRD",
+                                "SSP",
+                                "STD",
+                                "SYP",
+                                "SZL",
+                                "THB",
+                                "TJS",
+                                "TMT",
+                                "TND",
+                                "TOP",
+                                "TRY",
+                                "TTD",
+                                "TWD",
+                                "TZS",
+                                "UAH",
+                                "UGX",
+                                "USD",
+                                "UYU",
+                                "UZS",
+                                "VEF",
+                                "VND",
+                                "VUV",
+                                "WST",
+                                "XAF",
+                                "XCD",
+                                "XOF",
+                                "XPF",
+                                "YER",
+                                "ZAR",
+                                "ZMW"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "customerId",
+                        "type": "number",
+                        "label": "Customer ID"
+                    },
+                    {
+                        "name": "customerNote",
+                        "type": "text",
+                        "label": "Customer Note"
+                    },
+                    {
+                        "name": "billing",
+                        "type": "collection",
+                        "label": "Billing",
+                        "spec": [
+                            {
+                                "name": "firstName",
+                                "type": "text",
+                                "label": "First Name"
+                            },
+                            {
+                                "name": "lastName",
+                                "type": "text",
+                                "label": "Last Name"
+                            },
+                            {
+                                "name": "company",
+                                "type": "text",
+                                "label": "Company"
+                            },
+                            {
+                                "name": "address1",
+                                "type": "text",
+                                "label": "Address 1"
+                            },
+                            {
+                                "name": "address2",
+                                "type": "text",
+                                "label": "Address 2"
+                            },
+                            {
+                                "name": "city",
+                                "type": "text",
+                                "label": "City"
+                            },
+                            {
+                                "name": "state",
+                                "type": "text",
+                                "label": "State"
+                            },
+                            {
+                                "name": "postcode",
+                                "type": "text",
+                                "label": "Postcode"
+                            },
+                            {
+                                "name": "country",
+                                "type": "text",
+                                "label": "Country"
+                            },
+                            {
+                                "name": "email",
+                                "type": "email",
+                                "label": "Email"
+                            },
+                            {
+                                "name": "phone",
+                                "type": "text",
+                                "label": "Phone"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "shipping",
+                        "type": "collection",
+                        "label": "Shipping",
+                        "spec": [
+                            {
+                                "name": "firstName",
+                                "type": "text",
+                                "label": "First Name"
+                            },
+                            {
+                                "name": "lastName",
+                                "type": "text",
+                                "label": "Last Name"
+                            },
+                            {
+                                "name": "company",
+                                "type": "text",
+                                "label": "Company"
+                            },
+                            {
+                                "name": "address1",
+                                "type": "text",
+                                "label": "Address 1"
+                            },
+                            {
+                                "name": "address2",
+                                "type": "text",
+                                "label": "Address 2"
+                            },
+                            {
+                                "name": "city",
+                                "type": "text",
+                                "label": "City"
+                            },
+                            {
+                                "name": "state",
+                                "type": "text",
+                                "label": "State"
+                            },
+                            {
+                                "name": "postcode",
+                                "type": "text",
+                                "label": "Postcode"
+                            },
+                            {
+                                "name": "country",
+                                "type": "text",
+                                "label": "Country"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "paymentMethod",
+                        "type": "select",
+                        "label": "Payment Method"
+                    },
+                    {
+                        "name": "paymentMethodTitle",
+                        "type": "text",
+                        "label": "Payment Method Title"
+                    },
+                    {
+                        "name": "transactionId",
+                        "type": "text",
+                        "label": "Transaction ID"
+                    },
+                    {
+                        "name": "lineItems",
+                        "type": "array",
+                        "label": "Line Items",
+                        "spec": [
+                            {
+                                "name": "id",
+                                "type": "text",
+                                "label": "Order Item ID"
+                            },
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name"
+                            },
+                            {
+                                "name": "productId",
+                                "type": "number",
+                                "label": "Product ID"
+                            },
+                            {
+                                "name": "variationId",
+                                "type": "number",
+                                "label": "Variation ID"
+                            },
+                            {
+                                "name": "quantity",
+                                "type": "number",
+                                "label": "Quantity"
+                            },
+                            {
+                                "name": "taxClass",
+                                "type": "select",
+                                "label": "Tax Class",
+                                "options": [],
+                                "dynamic": true
+                            },
+                            {
+                                "name": "subtotalTax",
+                                "type": "text",
+                                "label": "Subtotal Tax"
+                            },
+                            {
+                                "name": "total",
+                                "type": "text",
+                                "label": "Total"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "shippingLines",
+                        "type": "array",
+                        "label": "Shipping Lines",
+                        "spec": [
+                            {
+                                "name": "methodId",
+                                "type": "select",
+                                "label": "Shipping Method",
+                                "options": [],
+                                "dynamic": true
+                            },
+                            {
+                                "name": "methodTitle",
+                                "type": "text",
+                                "label": "Shipping Title"
+                            },
+                            {
+                                "name": "total",
+                                "type": "text",
+                                "label": "Total"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "feeLines",
+                        "type": "array",
+                        "label": "Fee Lines",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name"
+                            },
+                            {
+                                "name": "taxClass",
+                                "type": "select",
+                                "label": "Tax Class",
+                                "options": [],
+                                "dynamic": true
+                            },
+                            {
+                                "name": "taxStatus",
+                                "type": "select",
+                                "label": "Tax Status",
+                                "options": [
+                                    {
+                                        "label": "Taxable",
+                                        "value": "taxable"
+                                    },
+                                    {
+                                        "label": "None",
+                                        "value": "none"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "total",
+                                "type": "text",
+                                "label": "Total (after Discounts)"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "couponLines",
+                        "type": "array",
+                        "label": "Coupon Lines",
+                        "spec": [
+                            {
+                                "name": "code",
+                                "type": "text",
+                                "label": "Code"
+                            },
+                            {
+                                "name": "discount",
+                                "type": "text",
+                                "label": "Discount"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "setPaid",
+                        "type": "boolean",
+                        "label": "Set Paid"
+                    },
+                    {
+                        "name": "metaData",
+                        "type": "array",
+                        "label": "Meta Data",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "required": true
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.make.com",
+        "notes": []
+    }
+}

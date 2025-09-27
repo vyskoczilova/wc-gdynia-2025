@@ -11,8 +11,8 @@ The repository serves as a collection of automation examples for [Make.com](http
 ## Directory Structure
 
 - **`.mcp.json`** - MCP server setup for Make.com integration
-- **`notes.md`** - Workshop notes with Make.com links and resources
 - **`scenarios/`** - Pre-built Make.com automation blueprints
+  - **`bank_find_order_update_state.json`** - Bank transaction trigger to WooCommerce order search and status update automation
   - **`form-existing-order-check-project-tool.json`** - Form webhook to existing order lookup with custom project tool integration
   - **`form-urgency-slack.json`** - Form data urgency analysis with Slack integration
   - **`google-sheets-new-wc-coupons.json`** - Google Sheets to WooCommerce coupon creation automation
