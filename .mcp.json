@@ -1,0 +1,10 @@
+{
+	"mcpServers": {
+		"make-dot-com": {
+          "command": "mcp-remote",
+          "args": [
+            "https://eu1.make.com/mcp/api/v1/u/5e20514e-6ac0-4b61-8392-e1aa48519d9e/sse"
+          ]
+        }
+	}
+}

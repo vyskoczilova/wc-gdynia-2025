@@ -1,0 +1,775 @@
+{
+    "name": "Form → existing order → post info to custom project tool",
+    "flow": [
+        {
+            "id": 1,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 1444086,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 150
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "data": {
+                                "editable": "true"
+                            },
+                            "label": "WCEU webhook"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook:gateway-webhook",
+                        "label": "Webhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "openai-gpt-3:CreateCompletion",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 2319404
+            },
+            "mapper": {
+                "model": "gpt-4-turbo",
+                "top_p": "1",
+                "select": "chat",
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": "Create a task title from the Contact Us form message posted below. Keep it short and informative.\n\n{{1.description}}"
+                    }
+                ],
+                "max_tokens": "0",
+                "temperature": "1",
+                "n_completions": "1",
+                "response_format": "text"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 150
+                },
+                "restore": {
+                    "expect": {
+                        "stop": {
+                            "mode": "chose"
+                        },
+                        "model": {
+                            "mode": "chose",
+                            "label": "gpt-4-turbo (system)"
+                        },
+                        "select": {
+                            "label": "Create a Chat Completion (GPT Models)"
+                        },
+                        "messages": {
+                            "mode": "chose",
+                            "items": [
+                                {
+                                    "role": {
+                                        "mode": "chose",
+                                        "label": "User"
+                                    }
+                                }
+                            ]
+                        },
+                        "logit_bias": {
+                            "mode": "chose"
+                        },
+                        "response_format": {
+                            "mode": "chose",
+                            "label": "Text"
+                        },
+                        "additionalParameters": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "openai-gpt-3"
+                            },
+                            "label": "My OpenAI connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:openai-gpt-3",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Select Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "chat",
+                                "prompt"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "max_tokens",
+                        "type": "number",
+                        "label": "Max Tokens",
+                        "required": true
+                    },
+                    {
+                        "name": "temperature",
+                        "type": "number",
+                        "label": "Temperature",
+                        "validate": {
+                            "max": 2,
+                            "min": 0
+                        }
+                    },
+                    {
+                        "name": "top_p",
+                        "type": "number",
+                        "label": "Top P",
+                        "validate": {
+                            "max": 1,
+                            "min": 0
+                        }
+                    },
+                    {
+                        "name": "n_completions",
+                        "type": "number",
+                        "label": "Number"
+                    },
+                    {
+                        "name": "frequency_penalty",
+                        "type": "number",
+                        "label": "Frequency Penalty",
+                        "validate": {
+                            "max": 2,
+                            "min": -2
+                        }
+                    },
+                    {
+                        "name": "presence_penalty",
+                        "type": "number",
+                        "label": "Presence Penalty",
+                        "validate": {
+                            "max": 2,
+                            "min": -2
+                        }
+                    },
+                    {
+                        "name": "logit_bias",
+                        "spec": {
+                            "name": "value",
+                            "spec": [
+                                {
+                                    "name": "token",
+                                    "type": "text",
+                                    "label": "Token ID",
+                                    "required": true
+                                },
+                                {
+                                    "name": "probability",
+                                    "type": "number",
+                                    "label": "Probability",
+                                    "required": true,
+                                    "validate": {
+                                        "max": 100,
+                                        "min": -100
+                                    }
+                                }
+                            ],
+                            "type": "collection",
+                            "label": "Token Probability"
+                        },
+                        "type": "array",
+                        "label": "Token Probability"
+                    },
+                    {
+                        "name": "response_format",
+                        "type": "select",
+                        "label": "Response Format",
+                        "validate": {
+                            "enum": [
+                                "text",
+                                "json_object"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "seed",
+                        "type": "integer",
+                        "label": "Seed"
+                    },
+                    {
+                        "name": "stop",
+                        "spec": {
+                            "name": "value",
+                            "type": "text",
+                            "label": "Stop Sequence"
+                        },
+                        "type": "array",
+                        "label": "Stop Sequences",
+                        "validate": {
+                            "maxItems": 4
+                        }
+                    },
+                    {
+                        "name": "additionalParameters",
+                        "spec": {
+                            "name": "value",
+                            "spec": [
+                                {
+                                    "name": "key",
+                                    "type": "text",
+                                    "label": "Parameter Name",
+                                    "required": true
+                                },
+                                {
+                                    "name": "type",
+                                    "type": "select",
+                                    "label": "Input Type",
+                                    "options": [
+                                        {
+                                            "label": "Text",
+                                            "value": "text",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "text",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ],
+                                            "default": true
+                                        },
+                                        {
+                                            "label": "Number",
+                                            "value": "number",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "number",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "label": "Boolean",
+                                            "value": "boolean",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "boolean",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "label": "Date",
+                                            "value": "date",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "date",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "label": "Any",
+                                            "value": "any",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "any",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ],
+                            "type": "collection",
+                            "label": "Input Parameter"
+                        },
+                        "type": "array",
+                        "label": "Other Input Parameters"
+                    },
+                    {
+                        "name": "model",
+                        "type": "select",
+                        "label": "Model",
+                        "required": true
+                    },
+                    {
+                        "name": "messages",
+                        "spec": {
+                            "name": "value",
+                            "spec": [
+                                {
+                                    "name": "role",
+                                    "type": "select",
+                                    "label": "Role",
+                                    "options": [
+                                        {
+                                            "label": "System",
+                                            "value": "system"
+                                        },
+                                        {
+                                            "label": "User",
+                                            "value": "user"
+                                        },
+                                        {
+                                            "label": "Assistant",
+                                            "value": "assistant"
+                                        }
+                                    ],
+                                    "required": true
+                                },
+                                {
+                                    "name": "content",
+                                    "type": "text",
+                                    "label": "Message Content"
+                                }
+                            ],
+                            "type": "collection",
+                            "label": "Message"
+                        },
+                        "type": "array",
+                        "label": "Messages",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "freelo:createtask",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 1410463
+            },
+            "mapper": {
+                "name": "{{4.result}}",
+                "worker_id": 76802,
+                "project_id": 394502,
+                "tasklist_id": 1122135,
+                "priority_enum": "h"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 150
+                },
+                "restore": {
+                    "expect": {
+                        "worker_id": {
+                            "mode": "chose",
+                            "label": "někdo jiný"
+                        },
+                        "project_id": {
+                            "mode": "chose",
+                            "label": "WCEU"
+                        },
+                        "tasklist_id": {
+                            "mode": "chose",
+                            "label": "contact us"
+                        },
+                        "priority_enum": {
+                            "mode": "chose",
+                            "label": "High"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "freelo"
+                            },
+                            "label": "Freelo někdo jiný"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:freelo",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "project_id",
+                        "type": "select",
+                        "label": "Project",
+                        "required": true
+                    },
+                    {
+                        "name": "name",
+                        "type": "text",
+                        "label": "Name",
+                        "required": true
+                    },
+                    {
+                        "name": "due_date",
+                        "type": "date",
+                        "label": "Due date"
+                    },
+                    {
+                        "name": "due_date_end",
+                        "type": "date",
+                        "label": "Due date end"
+                    },
+                    {
+                        "name": "worker_id",
+                        "type": "select",
+                        "label": "Worker ID"
+                    },
+                    {
+                        "name": "priority_enum",
+                        "type": "select",
+                        "label": "Priority",
+                        "validate": {
+                            "enum": [
+                                "null",
+                                "h",
+                                "m",
+                                "l"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "tasklist_id",
+                        "type": "select",
+                        "label": "To-Do List",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "woocommerce:ListCustomers",
+            "version": 3,
+            "parameters": {
+                "__IMTCONN__": 2640635
+            },
+            "mapper": {
+                "role": "customer",
+                "email": "{{1.email}}",
+                "limit": "1"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 150
+                },
+                "restore": {
+                    "expect": {
+                        "role": {
+                            "mode": "chose",
+                            "label": "Customer"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "woocommerce2"
+                            },
+                            "label": "WCEU 2024"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:woocommerce2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "search",
+                        "type": "text",
+                        "label": "Search"
+                    },
+                    {
+                        "name": "email",
+                        "type": "email",
+                        "label": "Email"
+                    },
+                    {
+                        "name": "role",
+                        "type": "select",
+                        "label": "Role"
+                    },
+                    {
+                        "name": "limit",
+                        "type": "number",
+                        "label": "Limit",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 9,
+            "module": "builtin:BasicRouter",
+            "version": 1,
+            "parameters": {
+                "else": 0
+            },
+            "mapper": null,
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 150
+                }
+            },
+            "routes": [
+                {
+                    "flow": [
+                        {
+                            "id": 6,
+                            "module": "freelo:addcomment",
+                            "version": 1,
+                            "parameters": {
+                                "__IMTCONN__": 1410463
+                            },
+                            "filter": {
+                                "name": "default",
+                                "conditions": []
+                            },
+                            "mapper": {
+                                "content": "Name: {{1.names.first_name}} {{1.names.last_name}} <br>\nE-mail: {{1.email}}<br>\n<br>\n{{1.description}}",
+                                "task_id": "{{3.id}}"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1500,
+                                    "y": 0
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "files": {
+                                            "mode": "chose"
+                                        },
+                                        "project_id": {
+                                            "mode": "edit"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "freelo"
+                                            },
+                                            "label": "Freelo někdo jiný"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:freelo",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "project_id",
+                                        "type": "select",
+                                        "label": "Project"
+                                    },
+                                    {
+                                        "name": "content",
+                                        "type": "text",
+                                        "label": "Comment",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "files",
+                                        "spec": [
+                                            {
+                                                "name": "download_url",
+                                                "type": "text",
+                                                "label": "Url to download the file from"
+                                            },
+                                            {
+                                                "name": "filename",
+                                                "type": "text",
+                                                "label": "File name"
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Files"
+                                    },
+                                    {
+                                        "name": "tasklist_id",
+                                        "type": "any",
+                                        "label": "To-Do List"
+                                    },
+                                    {
+                                        "name": "task_id",
+                                        "type": "any",
+                                        "label": "Task",
+                                        "required": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 7,
+                            "module": "freelo:addcomment",
+                            "version": 1,
+                            "parameters": {
+                                "__IMTCONN__": 1410463
+                            },
+                            "filter": {
+                                "name": "Is customer",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{2.`__IMTLENGTH__`}}",
+                                            "b": "0",
+                                            "o": "number:greater"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "content": "Name: {{1.names.first_name}} <br>{{1.names.last_name}}<br>\nE-mail: {{1.email}}<br>\n<br>\nWooCommerce customer id: {{2.id}}<br>\n<br>\n{{1.description}}",
+                                "task_id": "{{3.id}}"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1500,
+                                    "y": 300
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "files": {
+                                            "mode": "chose"
+                                        },
+                                        "project_id": {
+                                            "mode": "edit"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "freelo"
+                                            },
+                                            "label": "Freelo někdo jiný"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:freelo",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "project_id",
+                                        "type": "select",
+                                        "label": "Project"
+                                    },
+                                    {
+                                        "name": "content",
+                                        "type": "text",
+                                        "label": "Comment",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "files",
+                                        "spec": [
+                                            {
+                                                "name": "download_url",
+                                                "type": "text",
+                                                "label": "Url to download the file from"
+                                            },
+                                            {
+                                                "name": "filename",
+                                                "type": "text",
+                                                "label": "File name"
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Files"
+                                    },
+                                    {
+                                        "name": "tasklist_id",
+                                        "type": "any",
+                                        "label": "To-Do List"
+                                    },
+                                    {
+                                        "name": "task_id",
+                                        "type": "any",
+                                        "label": "Task",
+                                        "required": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.make.com",
+        "notes": []
+    }
+}
